@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+SQLAlchemy
+
+python-multipart
+
+#verify the JWT tokens
+python-jose[cryptography]
+
+#password hashes b y using algo bcrypt.
+passlib[bcrypt]
+
+#database
+psycopg2
+
+gunicorn
