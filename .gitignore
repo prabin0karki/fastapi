@@ -1,0 +1,10 @@
+/media/
+/tmp/
+/htmlcov/
+.coverage
+__pycache__/
+sqlite_db.db
+*.pyc
+.pytest_cache/
+ngrok
+.vscode
