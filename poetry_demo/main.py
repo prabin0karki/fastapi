@@ -4,8 +4,7 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 
-from .crud import (ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token,
-                   get_current_active_user, get_password_hash, pwd_context)
+from .crud import (ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token,get_current_active_user, get_password_hash, pwd_context)
 from .database import database, engine, metadata
 from .models import users
 from .schemas import Token, User, UserCreate
@@ -74,7 +73,7 @@ async def create_user(user: UserCreate):
     raise HTTPException(status_code=400, detail="Email already registered")
 
 
-@app.get("/users/", response_model= User)
+@app.get("/users/", response_model=User)
 async def read_users(
         current_user: User = Depends(get_current_active_user)):
     query = users.select().where(users.c.email == current_user.email)

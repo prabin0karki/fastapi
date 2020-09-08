@@ -1,0 +1,13 @@
+README.rst
+setup.py
+poetry_demo/__init__.py
+poetry_demo/crud.py
+poetry_demo/database.py
+poetry_demo/main.py
+poetry_demo/models.py
+poetry_demo/schemas.py
+poetry_demo.egg-info/PKG-INFO
+poetry_demo.egg-info/SOURCES.txt
+poetry_demo.egg-info/dependency_links.txt
+poetry_demo.egg-info/requires.txt
+poetry_demo.egg-info/top_level.txt
