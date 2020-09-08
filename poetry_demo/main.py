@@ -1,13 +1,14 @@
-from . schemas import User, UserCreate, Token
-from . crud import get_password_hash, get_current_active_user,\
-    create_access_token, pwd_context, ACCESS_TOKEN_EXPIRE_MINUTES
-from . models import users
-from . database import database, engine, metadata
-from fastapi import FastAPI, Depends, HTTPException, status
+from datetime import timedelta
+
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 
-from fastapi.middleware.cors import CORSMiddleware
-from datetime import timedelta
+from .crud import (ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token,
+                   get_current_active_user, get_password_hash, pwd_context)
+from .database import database, engine, metadata
+from .models import users
+from .schemas import Token, User, UserCreate
 
 # def get_app():
 #     app = FastAPI(title="GINO FastAPI Demo")

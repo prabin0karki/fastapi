@@ -1,5 +1,6 @@
 import databases
 import sqlalchemy
+
 # SQLAlchemy specific code, as with any other app
 # DATABASE_URL = "sqlite:///./test.db"
 DATABASE_URL = "postgresql://prabin:prabin@localhost/project_db"
