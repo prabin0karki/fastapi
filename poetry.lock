@@ -92,7 +92,7 @@ version = "1.14.2"
 pycparser = "*"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Validate configuration and produce human readable error messages."
 name = "cfgv"
 optional = false
@@ -239,7 +239,7 @@ version = "0.1.1"
 test = ["Cython (0.29.14)"]
 
 [[package]]
-category = "dev"
+category = "main"
 description = "File identification library for Python"
 name = "identify"
 optional = false
@@ -303,7 +303,7 @@ python-versions = "*"
 version = "0.4.3"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Node.js virtual environment builder"
 name = "nodeenv"
 optional = false
@@ -361,7 +361,7 @@ version = "0.13.1"
 dev = ["pre-commit", "tox"]
 
 [[package]]
-category = "dev"
+category = "main"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
 name = "pre-commit"
 optional = false
@@ -502,7 +502,7 @@ version = "0.0.5"
 six = ">=1.4.0"
 
 [[package]]
-category = "dev"
+category = "main"
 description = "YAML parser and emitter for Python"
 name = "pyyaml"
 optional = false
@@ -568,7 +568,7 @@ version = "0.13.6"
 full = ["aiofiles", "graphene", "itsdangerous", "jinja2", "python-multipart", "pyyaml", "requests", "ujson"]
 
 [[package]]
-category = "dev"
+category = "main"
 description = "Python Library for Tom's Obvious, Minimal Language"
 name = "toml"
 optional = false
@@ -653,7 +653,7 @@ python-versions = ">=3.6.1"
 version = "8.1"
 
 [metadata]
-content-hash = "fc81f464d08511943e681a6ce69b14dc0799798360cc0151b01a27af261c5ce8"
+content-hash = "358a890bccad79e04fab3408614a3ab84f62dd069ef5b81e03f39cabe1ae2289"
 lock-version = "1.0"
 python-versions = "^3.8"
 
