@@ -1,46 +1,64 @@
-from sqlalchemy.orm import Session
-
-import models, schemas
+from fastapi import Depends, HTTPException, status
+from schemas import User, TokenData
+from models import users
+from database import database
+from typing import Optional
+from datetime import datetime, timedelta
 from passlib.context import CryptContext
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-from database import SessionLocal
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
-from models import User
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-#verify if password match with hashed_password
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
 
-#generate a hash password
 def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-#access a user ingo by a email
-def get_user_by_email(db: Session, email: str):
-    return db.query(models.User).filter(models.User.email == email).first()
-
-
-
-#create a user or register a user
-def create_user(db: Session, user: schemas.UserCreate):
-    password = get_password_hash(user.password)
-    db_user = models.User(email=user.email, password=password,\
-        first_name=user.first_name, last_name=user.last_name)
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
-
-
-
-#authenticate_user before create a token
-def authenticate_user(db: Session, email: str, password: str):
-    user = db.query(models.User).filter(models.User.email == email).first()
-    if not user:
-        return False
-    if not verify_password(password, user.password):
-        return False
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+        token_data = TokenData(email=email)
+    except JWTError:
+        raise credentials_exception
+    query = users.select().where(users.c.email == token_data.email)
+    user = await database.fetch_one(query=query)
+    if user is None:
+        raise credentials_exception
     return user
+
+
+async def get_current_active_user(
+        current_user: User = Depends(get_current_user)):
+    if not current_user:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return current_user
+
+
+async def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+def create_access_token(
+        data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.utcnow() + expires_delta
+    else:
+        expire = datetime.utcnow() + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
