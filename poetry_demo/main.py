@@ -4,8 +4,15 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordRequestForm
 
-from .crud import (ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token,get_current_active_user, get_password_hash, pwd_context)
-from .database import database, engine, metadata
+from .crud import (
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+    create_access_token,
+    get_current_active_user,
+    get_password_hash,
+    pwd_context,
+)
+
+from .database import database, metadata
 from .models import users
 from .schemas import Token, User, UserCreate
 
@@ -23,7 +30,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-metadata.create_all(engine)
+
+target_metadata = metadata
+
+
+# metadata.create_all(engine)
 
 
 @app.on_event("startup")
@@ -37,8 +48,7 @@ async def shutdown():
 
 
 @app.post("/token", response_model=Token)
-async def login_for_access_token(
-        form_data: OAuth2PasswordRequestForm = Depends()):
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     email = form_data.username
     password = form_data.password
     query = users.select().where(users.c.email == email)
@@ -48,7 +58,7 @@ async def login_for_access_token(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
-        ) 
+        )
     if not pwd_context.verify(password, user.password):
         return False
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -66,16 +76,17 @@ async def create_user(user: UserCreate):
         password = get_password_hash(user.password)
         query = users.insert().values(
             first_name=user.first_name,
-            last_name=user.last_name, email=user.email,
-            password=password)
+            last_name=user.last_name,
+            email=user.email,
+            password=password,
+        )
         last_record_id = await database.execute(query)
         return {**user.dict(), "id": last_record_id}
     raise HTTPException(status_code=400, detail="Email already registered")
 
 
 @app.get("/users/", response_model=User)
-async def read_users(
-        current_user: User = Depends(get_current_active_user)):
+async def read_users(current_user: User = Depends(get_current_active_user)):
     query = users.select().where(users.c.email == current_user.email)
     return await database.fetch_one(query=query)
     # print("==============")
