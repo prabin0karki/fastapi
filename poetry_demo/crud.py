@@ -1,12 +1,14 @@
-from fastapi import Depends, HTTPException, status
-from . schemas import User, TokenData
-from . models import users
-from . database import database
-from typing import Optional
 from datetime import datetime, timedelta
-from passlib.context import CryptContext
+from typing import Optional
+
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
+from passlib.context import CryptContext
+
+from .database import database
+from .models import users
+from .schemas import TokenData, User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
