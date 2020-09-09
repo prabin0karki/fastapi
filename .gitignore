@@ -11,4 +11,3 @@
 .coverage
 .pytest_cache
 .pypirc
->>>>>>> dev-poetry
