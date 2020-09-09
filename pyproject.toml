@@ -16,6 +16,7 @@ databases = {extras = ["postgresql"], version = "^0.3.2"}
 isort = "^5.5.1"
 pre-commit = "^2.7.1"
 alembic = "^1.4.2"
+mypy = "^0.782"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
