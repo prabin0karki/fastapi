@@ -31,3 +31,7 @@ class User(UserBase):
 
 class UserInDB(User):
     password: str
+
+
+class Category(BaseModel):
+    name: str
