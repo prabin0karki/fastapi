@@ -25,7 +25,7 @@ async def create_user(
         last_record_id = await database.execute(query)
         return {**product.dict(), "id": last_record_id}
     raise HTTPException(
-        status_code=400, detail="Category with that name already registered"
+        status_code=400, detail="Product with that name already registered"
     )
 
 

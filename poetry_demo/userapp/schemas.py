@@ -16,9 +16,13 @@ class User(BaseModel):
     first_name: str
     last_name: str
     email: str
-    is_ative: Optional[bool] = None
-    disabled: Optional[bool] = None
 
 
 class UserCreate(User):
     password: str
+
+
+class UserIn(User):
+    id: int
+    is_active: bool
+    disabled: bool

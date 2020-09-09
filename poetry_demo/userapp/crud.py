@@ -26,25 +26,17 @@ def verify_password(plain_password, hashed_password) -> str:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-async def get_user(email: str) -> UserCreate:
-    query = users.select()
-    user_list = await database.fetch_all(query)
-    for user in user_list:
-        if user["email"] == email:
-            return UserCreate(**user)
-    return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-
-
 """authenticating user"""
 
 
-async def authenticate_user(username: str, password: str):
-    user = await get_user(username)
-    if not user:
+async def authenticate_user(email: str, password: str):
+    query = users.select().where(users.c.email == email)
+    user_list = await database.fetch_all(query)
+    for user in user_list:
+        if user["email"] == email:
+            if verify_password(password, user["password"]):
+                return user
         return False
-    if not verify_password(password, user.password):
-        return False
-    return user
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):

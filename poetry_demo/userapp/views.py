@@ -4,7 +4,7 @@ from datetime import timedelta
 from fastapi.security import OAuth2PasswordRequestForm
 from ..database import database
 from .models import users
-from .schemas import Token, User, UserCreate
+from .schemas import Token, User, UserCreate, UserIn
 from fastapi import Depends, status
 from .crud import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
@@ -13,6 +13,7 @@ from .crud import (
     get_password_hash,
     authenticate_user,
 )
+from loguru import logger
 
 router = APIRouter()
 
@@ -21,6 +22,7 @@ router = APIRouter()
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await authenticate_user(form_data.username, form_data.password)
     if not user:
+        logger.error("Incorrect email or password.")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -28,8 +30,9 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+        data={"sub": user["email"]}, expires_delta=access_token_expires
     )
+    logger.success("Successfully get a token.")
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -48,11 +51,13 @@ async def create_user(user: UserCreate):
             disabled=False,
         )
         last_record_id = await database.execute(query)
+        logger.success("User Register Successfully.")
         return {**user.dict(), "id": last_record_id}
+    logger.warning("Email already registered.")
     raise HTTPException(status_code=400, detail="Email already registered")
 
 
-@router.get("/users/", response_model=List[User])
+@router.get("/users/", response_model=List[UserIn])
 async def read_users(current_user: User = Depends(get_current_active_user)):
     query = users.select()
     return await database.fetch_all(query)

@@ -1,4 +1,5 @@
 import uvicorn
+from loguru import logger
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .database import database
@@ -20,11 +21,13 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup():
     await database.connect()
+    logger.info("Database Connected Successfully.")
 
 
 @app.on_event("shutdown")
 async def shutdown():
     await database.disconnect()
+    logger.info("Database Disconnected Successfully.")
 
 
 app.include_router(views.router, tags=["User"])
