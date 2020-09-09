@@ -1,7 +1,8 @@
 """categories_table
-Revision ID: e33f55c81eda
-Revises: 1c13284f2007
-Create Date: 2020-09-09 12:28:42.498349
+
+Revision ID: a167c47db23e
+Revises: fbee1d8d1ad0
+Create Date: 2020-09-09 17:54:51.841026
 
 """
 from alembic import op
@@ -9,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "e33f55c81eda"
-down_revision = "1c13284f2007"
+revision = "a167c47db23e"
+down_revision = "fbee1d8d1ad0"
 branch_labels = None
 depends_on = None
 

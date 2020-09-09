@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from .database import database
 from .userapp import views
 from .categoryapp import cat_views
+from .productapp import pro_views
 
 app = FastAPI()
 
@@ -28,6 +29,8 @@ async def shutdown():
 
 app.include_router(views.router, tags=["User"])
 app.include_router(cat_views.router, tags=["Category"])
+app.include_router(pro_views.router, tags=["Product"])
+
 
 if __name__ == "__main__":
     uvicorn.run("app.main:app", port=8000, reload=True, access_log=False)
