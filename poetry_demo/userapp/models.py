@@ -9,6 +9,6 @@ users = sqlalchemy.Table(
     sqlalchemy.Column("last_name", sqlalchemy.String),
     sqlalchemy.Column("email", sqlalchemy.String, unique=True, index=True),
     sqlalchemy.Column("password", sqlalchemy.String),
-    sqlalchemy.Column("is_active", sqlalchemy.Boolean, default=1),
-    sqlalchemy.Column("disabled", sqlalchemy.Boolean, default=0),
+    sqlalchemy.Column("is_active", sqlalchemy.Boolean, default=True),
+    sqlalchemy.Column("disabled", sqlalchemy.Boolean, default=False),
 )

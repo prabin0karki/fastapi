@@ -8,7 +8,7 @@ from passlib.context import CryptContext
 
 from ..database import database
 from .models import users
-from .schemas import TokenData, User
+from .schemas import TokenData, User, UserCreate
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -20,6 +20,31 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 def get_password_hash(password):
     return pwd_context.hash(password)
+
+
+def verify_password(plain_password, hashed_password) -> str:
+    return pwd_context.verify(plain_password, hashed_password)
+
+
+async def get_user(email: str) -> UserCreate:
+    query = users.select()
+    user_list = await database.fetch_all(query)
+    for user in user_list:
+        if user["email"] == email:
+            return UserCreate(**user)
+    return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+
+"""authenticating user"""
+
+
+async def authenticate_user(username: str, password: str):
+    user = await get_user(username)
+    if not user:
+        return False
+    if not verify_password(password, user.password):
+        return False
+    return user
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
@@ -47,10 +72,6 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
     if not current_user:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
-
-
-async def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
