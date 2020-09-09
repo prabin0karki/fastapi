@@ -12,26 +12,17 @@ class TokenData(BaseModel):
     email: Optional[str] = None
 
 
-class UserBase(BaseModel):
-    email: str
+class User(BaseModel):
     first_name: str
     last_name: str
+    email: str
 
 
-class UserCreate(UserBase):
+class UserCreate(User):
     password: str
 
 
-class User(UserBase):
+class UserIn(User):
     id: int
-
-    class Config:
-        orm_mode = True
-
-
-class UserInDB(User):
-    password: str
-
-
-class Category(BaseModel):
-    name: str
+    is_active: bool
+    disabled: bool
