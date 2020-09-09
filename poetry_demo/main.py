@@ -12,7 +12,7 @@ from .crud import (
     pwd_context,
 )
 
-from .database import database, metadata
+from .database import database
 from .models import users
 from .schemas import Token, User, UserCreate
 
@@ -31,7 +31,7 @@ app.add_middleware(
 )
 
 
-target_metadata = metadata
+# target_metadata = metadata
 
 
 # metadata.create_all(engine)
