@@ -18,5 +18,6 @@ products = sqlalchemy.Table(
         sqlalchemy.ForeignKey("categories.id"),
         nullable=False,
     ),
-    sqlalchemy.Column("is_available", sqlalchemy.Boolean, default=1),
+    sqlalchemy.Column("is_available", sqlalchemy.Boolean, default=True),
+    sqlalchemy.Column("price", sqlalchemy.Integer, default=250),
 )
