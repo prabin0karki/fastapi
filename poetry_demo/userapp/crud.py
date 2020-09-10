@@ -8,7 +8,7 @@ from passlib.context import CryptContext
 
 from ..database import database
 from .models import users
-from .schemas import TokenData, User, UserCreate
+from .schemas import TokenData, User
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

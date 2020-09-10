@@ -2,7 +2,7 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 from ..database import database
 from .models import categories
-from .schemas import Category
+from .schemas import Category, CategoryIn
 from fastapi import Depends
 from ..userapp.crud import get_current_active_user
 from ..userapp.schemas import User
@@ -25,7 +25,7 @@ async def create_user(
     )
 
 
-@router.get("/categories/", response_model=List[Category])
+@router.get("/categories/", response_model=List[CategoryIn])
 async def read_users(current_user: User = Depends(get_current_active_user)):
     query = categories.select()
     return await database.fetch_all(query=query)

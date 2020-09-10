@@ -61,4 +61,10 @@ async def create_user(user: UserCreate):
 async def read_users(current_user: User = Depends(get_current_active_user)):
     query = users.select()
     return await database.fetch_all(query)
+
+
+@router.get("/profile/", response_model=UserIn)
+async def user_profile(current_user: User = Depends(get_current_active_user)):
+    query = users.select().where(users.c.email == current_user["email"])
+    return await database.fetch_one(query=query)
     # return await database.fetch_one(query=query)
