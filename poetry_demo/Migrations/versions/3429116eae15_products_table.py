@@ -20,7 +20,7 @@ def upgrade():
     op.create_table(
         "products",
         sa.Column("id", sa.Integer, primary_key=True),
-        sa.Column("is_available", sa.Boolean(), default=1),
+        sa.Column("is_available", sa.Boolean(), default=True),
         sa.Column("name", sa.String(), unique=True, index=True),
         sa.Column("author_id", sa.Integer, sa.ForeignKey("users.id"), nullable=False),
         sa.Column(
